@@ -1,0 +1,22 @@
+{
+  "name": "paste",
+  "version": "0.0.1",
+  "description": "An custom made paste server based on NodeJS using frontend style from hastebin.com",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aljaxus/paste.git"
+  },
+  "author": "aljaxus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aljaxus/paste/issues"
+  },
+  "homepage": "https://github.com/aljaxus/paste#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
