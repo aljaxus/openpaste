@@ -8,8 +8,7 @@
   <script type="text/javascript" src="application.js"></script>
   <meta name="robots" content="noindex,nofollow" />
 </head>
-<body>
-  <ul id="messages"></ul>
+<body id="body">
   <div id="linenos">></div>
   <pre id="box" style="display:none;" class="hljs" tabindex="0">
     <code></code>
@@ -17,13 +16,19 @@
   <textarea spellcheck="false" id="textarea"></textarea>
 </body>
 <style>
+body:not(.loaded) #textarea {
+  display: none;
+}
+body.loaded #textarea {
+  border-left: 1px rgba(150, 150, 150, 0.5) solid;
+  padding-left: 1rem;
+  margin-left: -.5rem;
+}
 ::-webkit-scrollbar { width: 12px; height: 12px }
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
 </style>
 <script>
-function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-// use like
 var isCtrl = false;
 document.onkeyup=function(e){
     if(e.keyCode == 17) isCtrl=false;
@@ -32,15 +37,25 @@ document.onkeyup=function(e){
 document.onkeydown=function(e){
     if(e.keyCode == 17) isCtrl=true;
     if(e.keyCode == 83 && isCtrl == true) {
-      console.log('pressed crtl+s')
-      
+      const content = document.getElementById('textarea').value
+      if (content.length > 0) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", location.href+'paste', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            content: content
+        }))
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log(xhr.responseText)
+          }
+        }
+      }
       return false
     }
 }
 
-r(function(){
-  const input = document.getElementById('textarea')
-  input.focus()
-})
+function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
+r(() => {document.getElementById('textarea').focus(); document.getElementById('body').classList = document.getElementById('body').classList+=' loaded' } )
 </script>
 </html>
