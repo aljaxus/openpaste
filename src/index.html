@@ -10,27 +10,37 @@
 </head>
 <body>
   <ul id="messages"></ul>
-  <div id="key">
-    <div id="pointer" style="display:none;"></div>
-    <div id="box1">
-      <a href="https://github.com/aljaxus/paste" class="logo"></a>
-    </div>
-    <div id="box2">
-      <button class="save function button-picture">Save</button>
-      <button class="new function button-picture">New</button>
-      <button class="duplicate function button-picture">Duplicate & Edit</button>
-      <button class="raw function button-picture">Just Text</button>
-      <button class="twitter function button-picture">Twitter</button>
-    </div>
-    <div id="box3">
-      <div class="label"></div>
-      <div class="shortcut"></div>
-    </div>
-  </div>
   <div id="linenos">></div>
   <pre id="box" style="display:none;" class="hljs" tabindex="0">
     <code></code>
   </pre>
-  <textarea spellcheck="false"></textarea>
+  <textarea spellcheck="false" id="textarea"></textarea>
 </body>
+<style>
+::-webkit-scrollbar { width: 12px; height: 12px }
+::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
+</style>
+<script>
+function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
+// use like
+var isCtrl = false;
+document.onkeyup=function(e){
+    if(e.keyCode == 17) isCtrl=false;
+}
+
+document.onkeydown=function(e){
+    if(e.keyCode == 17) isCtrl=true;
+    if(e.keyCode == 83 && isCtrl == true) {
+      console.log('pressed crtl+s')
+      
+      return false
+    }
+}
+
+r(function(){
+  const input = document.getElementById('textarea')
+  input.focus()
+})
+</script>
 </html>
