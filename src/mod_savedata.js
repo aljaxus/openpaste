@@ -16,6 +16,23 @@ app.get('/', (req, res) => {
   })
 })
 
+app.post('/paste', (req, res) => {
+  if (req.params.content !== null) {
+    const nowms = (new Date).getTime()
+    console.log('nowms')
+    fs.writeFile('./pastes/'+nowms, req.params.content, function(err) {
+      if (err) { 
+        console.log(err)
+        res.sendStatus(500) 
+      } else {
+        res.send(nowms+'')
+      }
+    })
+  } else {
+    res.status(400)
+  }
+})
+
 app.get('/:filename.:extension([a-z]{1,5})', (req, res) => {
   res.send('Pretend that you\'re so happy with the data you should see here. '+JSON.stringify(req.params))
 })

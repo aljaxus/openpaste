@@ -47,7 +47,7 @@ document.onkeydown=function(e){
         }))
         xhr.onload = () => {
           if (xhr.status === 200) {
-            location.href = xhr.responseText
+            location.href = location.href+xhr.responseText
           }
         }
       }
