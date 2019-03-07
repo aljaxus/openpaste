@@ -1,11 +1,19 @@
 const express = require('express')
 const getip = require('./mod_getip')
+const fs = require('fs')
 
 const app = express().use(express.static('./pastes'))
-const index = 
 
 app.get('/', (req, res) => {
-  res.render('index')
+  fs.readFile("./src/index.html", (err, data) => {
+    if (err === null) {
+      res.writeHead(200, {'Content-Type': 'text/html'})
+      res.write(data)
+      res.end()
+    } else {
+      res.send('An error occured!')
+    }
+  })
 })
 
 app.get('/:filename.:extension([a-z]{1,5})', (req, res) => {
