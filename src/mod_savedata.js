@@ -8,8 +8,3 @@ const appServer = expressApp.listen(8101,'0.0.0.0' , () => {
   console.log('\n-> Server has started\n  |_ Console  @ '+addr+'/console.html\n  |_ Roulette @ '+addr+'/roulette.html\n\n\n')
   eventEmitter.emit('runRoulette')
 })
-
-
-module.exports = {
-
-}
