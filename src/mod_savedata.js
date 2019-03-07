@@ -1,10 +1,18 @@
 const express = require('express')
 const getip = require('./mod_getip')
 
-const expressApp = express().use(express.static('./pastes'))
+const app = express().use(express.static('./pastes'))
+const index = 
 
-const appServer = expressApp.listen(8101,'0.0.0.0' , () => {
-  const addr = 'http://'+getip.getLocalIP4()+':8100'
-  console.log('\n-> Server has started\n  |_ Console  @ '+addr+'/console.html\n  |_ Roulette @ '+addr+'/roulette.html\n\n\n')
-  eventEmitter.emit('runRoulette')
+app.get('/', (req, res) => {
+  res.render('index')
+})
+
+app.get('/:filename.:extension([a-z]{1,5})', (req, res) => {
+  res.send('Pretend that you\'re so happy with the data you should see here. '+JSON.stringify(req.params))
+})
+
+
+const appServer = app.listen(8101,'0.0.0.0' , () => {
+  console.log('\n-> Paste server has started on '+'http://'+getip.getLocalIP4()+':8101')
 })
