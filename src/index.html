@@ -46,8 +46,8 @@ document.onkeydown=function(e){
             content: content
         }))
         xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            console.log(xhr.responseText)
+          if (xhr.status === 200) {
+            location.href = xhr.responseText
           }
         }
       }
