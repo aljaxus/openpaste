@@ -2,7 +2,7 @@ const express = require('express')
 const getip = require('./mod_getip')
 const fs = require('fs')
 
-const app = express().use(express.static('./pastes'))
+const app = express().use(express.static('./public'))
 
 app.get('/', (req, res) => {
   fs.readFile("./src/index.html", (err, data) => {
@@ -16,16 +16,16 @@ app.get('/', (req, res) => {
   })
 })
 
-app.post('/paste', (req, res) => {
+app.post('/pastes', (req, res) => {
   if (req.params.content !== null) {
     const nowms = (new Date).getTime()
-    console.log('nowms')
-    fs.writeFile('./pastes/'+nowms, req.params.content, function(err) {
+    console.log(nowms)
+    fs.writeFile('./pastes/x_paste_'+nowms, req.params.content, function(err) {
       if (err) { 
         console.log(err)
         res.sendStatus(500) 
       } else {
-        res.send(nowms+'')
+        res.send(200, nowms+'')
       }
     })
   } else {
