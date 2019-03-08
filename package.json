@@ -4,7 +4,8 @@
   "description": "An custom made paste server based on NodeJS using frontend style from hastebin.com",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "serve": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,8 @@
   },
   "homepage": "https://github.com/aljaxus/openpaste#readme",
   "dependencies": {
+    "better-sqlite-pool": "^0.2.1",
+    "enmap": "^4.8.1",
     "express": "^4.16.4"
   }
 }
