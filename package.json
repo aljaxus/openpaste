@@ -19,6 +19,7 @@
   "homepage": "https://github.com/aljaxus/openpaste#readme",
   "dependencies": {
     "better-sqlite-pool": "^0.2.1",
+    "body-parser": "^1.18.3",
     "enmap": "^4.8.1",
     "express": "^4.16.4"
   }

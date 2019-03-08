@@ -9,17 +9,16 @@
   <meta name="robots" content="noindex,nofollow" />
 </head>
 <body id="body">
-  <div id="linenos">></div>
-  <pre id="box" style="display:none;" class="hljs" tabindex="0">
-    <code></code>
-  </pre>
-  <textarea spellcheck="false" id="textarea">some text</textarea>
+  <div id="linenos" style="width: 44px;"></div>
+  <pre id="box" class="hljs" tabindex="0"><code id="codebox"></code></pre>
+  <textarea spellcheck="false" id="textarea" oninput='updateInputHeight()'>some text</textarea>
 </body>
 <style>
-body:not(.loaded) #textarea {
-  display: none;
-}
-body.loaded #textarea {
+body:not(.loaded) #textarea { display: none; }
+body:not(.editor) #textarea { display: none; }
+body.editor #box { display: none; }
+
+#textarea {
   border-left: 1px rgba(150, 150, 150, 0.5) solid;
   padding-left: 1rem;
   margin-left: -.5rem;
@@ -27,10 +26,25 @@ body.loaded #textarea {
 ::-webkit-scrollbar { width: 12px; height: 12px }
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
+/*
+pre {
+ white-space: pre-wrap;       
+ white-space: -moz-pre-wrap;  
+ white-space: -pre-wrap;      
+ white-space: -o-pre-wrap;    
+ word-wrap: break-word;       
+}
+*/
 </style>
 
 
 <script>
+function updateInputHeight () {
+  const el = document.getElementById('textarea')
+  el.style.height = "";
+  el.style.height = el.scrollHeight + "px"
+}
+
 const url = location.href
 const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{13})(\.[a-z0-]{1,6})?)?/)
 const isEditor = urls[5]===undefined
@@ -47,12 +61,16 @@ if (!isEditor) {
       }))
       xhr.onload = () => {
         if (xhr.status === 200) {
-          document.getElementById('textarea').innerHTML = xhr.responseText
-          console.log(xhr.responseText)
+          document.getElementById('codebox').innerHTML = xhr.responseText
+          for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
+            document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
+          }
         } else {
           console.log(xhr.status)
         }
       }
+} else {
+  document.getElementById('linenos').innerHTML = '>'
 }
 </script>
 
@@ -88,6 +106,6 @@ document.onkeydown=function(e){
 }
 
 function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-r(() => {document.getElementById('textarea').focus(); document.getElementById('body').classList = document.getElementById('body').classList+=' loaded' } )
+r(() => {document.getElementById('textarea').focus(); document.getElementById('body').classList = document.getElementById('body').classList+=' loaded'; updateInputHeight() } )
 </script>
 </html>

@@ -1,21 +1,21 @@
 const app = require('./mod_servers').app
 const db = require('./mod_servers').enmap
-const fs = require('fs')
 
 
 app.post('/paste', (req, res) => {
-  if (req.params.content !== null) {
-    const nowms = (new Date).getTime()
-    console.log(nowms)
-    try {
-      db.set(nowms, req.params.content+'')
+  try {
+    const content = req.body.content
+    if (content!==null && content!==undefined) {
+      const nowms = (new Date).getTime()
+      db.set(nowms, (typeof content==='object'?JSON.stringify(content,null,2):content))
+      console.log('Saved new paste:\n  Size: '+(req.headers['content-length']/8)+'B')
       res.status(200).send(nowms+'')
-    } catch (error) {
-      console.log(error)
-      res.sendStatus(500)
+    } else {
+      res.sendStatus(400)
     }
-  } else {
-    res.sendStatus(400)
+  } catch (error) {
+    console.log(error)
+    res.sendStatus(500)
   }
 })
 

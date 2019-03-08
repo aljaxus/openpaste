@@ -1,8 +1,11 @@
 const express = require('express')
+const bodyParser = require("body-parser")
 const getip = require('./mod_getip')
 const Enmap = require("enmap");
 
-const app = express().use(express.static('./public'))
+const app = express()
+  .use(express.static('./public'))
+  .use(bodyParser.json({limit: '3mb'}))
 const db = new Enmap({
   name: "pastes",
   fetchAll: true,
