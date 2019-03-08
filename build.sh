@@ -5,12 +5,7 @@ echo ""
 echo "-> building aljaxus/openpaste docker image"
 docker build -t aljaxus/openpaste .
 echo ""
-echo "-> removing openpaste container if exists"
-docker kill openpaste &>/dev/null
-docker rm openpaste &>/dev/null
-echo "-> starting new container called openpaste"
-docker run -ti --name openpaste --cpus 1 --detach aljaxus/openpaste
+echo "Successfully built the docker image"
+read -p "Press any key to run the container - press ctrl+c to exit the script `echo $'\n '`"
 echo ""
-docker ps
-echo ""
-echo ""
+./run.sh
