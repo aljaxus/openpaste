@@ -16,6 +16,7 @@ db.defer.then( () => {
   console.log('-> enMap database is ready')
   app.listen(8101, '0.0.0.0' , () => {
     console.log('-> Paste server has started on '+'http://'+getip.getLocalIP4()+':8101')
+    if (process.env.ENV==='production') console.log('Press crtl+p & crtl+q to detach from container console')
   })
 })
 
