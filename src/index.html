@@ -13,7 +13,7 @@
   <pre id="box" style="display:none;" class="hljs" tabindex="0">
     <code></code>
   </pre>
-  <textarea spellcheck="false" id="textarea"></textarea>
+  <textarea spellcheck="false" id="textarea">some text</textarea>
 </body>
 <style>
 body:not(.loaded) #textarea {
@@ -28,12 +28,35 @@ body.loaded #textarea {
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
 </style>
+
+
 <script>
 const url = location.href
-const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{12}))?/)
+const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{13})(\.[a-z0-]{1,6})?)?/)
 const isEditor = urls[5]===undefined
-if (!isEditor) document.getElementById('textarea').setAttribute('disabled', true)
+if (!isEditor) document.getElementById('textarea').setAttribute('readonly', true)
+if (isEditor) document.getElementById('body').classList += ' editor'
+if (!isEditor) {
+  const pasteID = urls[5]
+  console.log('Requesting paste with id: '+pasteID)
+  let xhr = new XMLHttpRequest();
+      xhr.open("GET", '/getpaste?pasteid='+pasteID, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+          pasteid: pasteID
+      }))
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          document.getElementById('textarea').innerHTML = xhr.responseText
+          console.log(xhr.responseText)
+        } else {
+          console.log(xhr.status)
+        }
+      }
+}
 </script>
+
+
 <script>
 let isCtrl = false;
 document.onkeyup=function(e){
@@ -41,9 +64,8 @@ document.onkeyup=function(e){
 }
 
 document.onkeydown=function(e){
-  console.log(e.keyCode)
-  if(e.keyCode == 17) isCtrl=true;
-  if(e.keyCode == 83 && isCtrl == true) {
+  if(e.keyCode === 17) isCtrl=true;
+  if(e.keyCode === 83 && isCtrl === true && isEditor === true) {
     const content = document.getElementById('textarea').value
     if (content.length > 0) {
       let xhr = new XMLHttpRequest();
