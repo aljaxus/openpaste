@@ -16,16 +16,16 @@ app.get('/', (req, res) => {
   })
 })
 
-app.post('/pastes', (req, res) => {
+app.post('/paste', (req, res) => {
   if (req.params.content !== null) {
     const nowms = (new Date).getTime()
     console.log(nowms)
-    fs.writeFile('./pastes/x_paste_'+nowms, req.params.content, function(err) {
+    fs.writeFile('./pastes/'+nowms, req.params.content, function(err) {
       if (err) { 
         console.log(err)
-        res.sendStatus(500) 
+        res.sendStatus(500)
       } else {
-        res.send(200, nowms+'')
+        res.status(200).send(nowms+'')
       }
     })
   } else {
