@@ -29,33 +29,40 @@ body.loaded #textarea {
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
 </style>
 <script>
-var isCtrl = false;
+const url = location.href
+const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{12}))?/)
+const isEditor = urls[5]===undefined
+if (!isEditor) document.getElementById('textarea').setAttribute('disabled', true)
+</script>
+<script>
+let isCtrl = false;
 document.onkeyup=function(e){
-    if(e.keyCode == 17) isCtrl=false;
+  if(e.keyCode == 17) isCtrl=false;
 }
 
 document.onkeydown=function(e){
-    if(e.keyCode == 17) isCtrl=true;
-    if(e.keyCode == 83 && isCtrl == true) {
-      const content = document.getElementById('textarea').value
-      if (content.length > 0) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", location.href+'paste', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            content: content
-        }))
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            location.href = location.href+xhr.responseText
-            console.log(xhr.responseText)
-          } else {
-            console.log(xhr.status)
-          }
+  console.log(e.keyCode)
+  if(e.keyCode == 17) isCtrl=true;
+  if(e.keyCode == 83 && isCtrl == true) {
+    const content = document.getElementById('textarea').value
+    if (content.length > 0) {
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", location.href+'paste', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+          content: content
+      }))
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          location.href = location.href+xhr.responseText
+          console.log(xhr.responseText)
+        } else {
+          console.log(xhr.status)
         }
       }
-      return false
     }
+    return false
+  }
 }
 
 function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}

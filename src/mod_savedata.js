@@ -4,7 +4,7 @@ const fs = require('fs')
 
 const app = express().use(express.static('./public'))
 
-app.get('/', (req, res) => {
+app.get('/(:pasteid([0-9]{13})(\.:syntax([a-z]{1,5})?))?', (req, res) => {
   fs.readFile("./src/index.html", (err, data) => {
     if (err === null) {
       res.writeHead(200, {'Content-Type': 'text/html'})
@@ -33,9 +33,9 @@ app.post('/paste', (req, res) => {
   }
 })
 
-app.get('/:filename.:extension([a-z]{1,5})', (req, res) => {
-  res.send('Pretend that you\'re so happy with the data you should see here. '+JSON.stringify(req.params))
-})
+// app.get('/:filename.:extension([a-z]{1,5})', (req, res) => {
+//   res.send('Pretend that you\'re so happy with the data you should see here. '+JSON.stringify(req.params))
+// })
 
 
 const appServer = app.listen(8101,'0.0.0.0' , () => {
