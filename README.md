@@ -7,6 +7,6 @@ An custom made paste server based on NodeJS backend, using frontend from hastebi
 - Bash
 
 ##### Commands
-`git pull git@github.com:aljaxus/openpaste.git`
-`./build.sh`
-Press Enter to run the docker container
+* `git pull git@github.com:aljaxus/openpaste.git`
+* `./build.sh`
+* Press Enter to run the docker container
