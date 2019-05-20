@@ -26,7 +26,7 @@ body.editor #box { display: none; }
 ::-webkit-scrollbar { width: 12px; height: 12px }
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
-/*
+
 pre {
  white-space: pre-wrap;       
  white-space: -moz-pre-wrap;  
@@ -34,7 +34,7 @@ pre {
  white-space: -o-pre-wrap;    
  word-wrap: break-word;       
 }
-*/
+
 </style>
 
 
@@ -54,21 +54,24 @@ if (!isEditor) {
   const pasteID = urls[5]
   console.log('Requesting paste with id: '+pasteID)
   let xhr = new XMLHttpRequest();
-      xhr.open("GET", '/getpaste?pasteid='+pasteID, true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-          pasteid: pasteID
-      }))
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          document.getElementById('codebox').innerHTML = xhr.responseText
-          for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
-            document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
-          }
-        } else {
-          console.log(xhr.status)
-        }
+  xhr.open("GET", '/getpaste?pasteid='+pasteID, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+      pasteid: pasteID
+  }))
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      const codebox = document.getElementById('codebox') 
+      codebox.innerHTML = xhr.responseText
+      for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
+        document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
       }
+      console.log(hljs)
+      hljs.highlightBlock(codebox)
+    } else {
+      console.log(xhr.status)
+    }
+  }
 } else {
   document.getElementById('linenos').innerHTML = '>'
 }

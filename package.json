@@ -21,6 +21,7 @@
     "better-sqlite-pool": "^0.2.1",
     "body-parser": "^1.18.3",
     "enmap": "^4.8.1",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "highlight.js": "^9.15.6"
   }
 }
