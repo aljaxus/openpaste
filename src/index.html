@@ -10,6 +10,22 @@
 </head>
 <body id="body">
   <div id="linenos" style="width: 44px;"></div>
+  <div id="key">
+    <div id="box1">
+      <a href="https://aljaxus.eu" target="_blank">By Aljaxus</a>
+    </div>
+    <div id="box2">
+      <!-- <button class="save function button-picture enabled">Save</button> -->
+      <!-- <button class="new function button-picture enabled">New<div id="pointer" style="display: none;"></div></button> -->
+      <!-- <button class="duplicate function button-picture">Duplicate &amp; Edit</button> -->
+      <!-- <button class="raw function button-picture">Just Text</button> -->
+      <!-- <button class="twitter function button-picture">Twitter</button> -->
+    </div>
+    <div id="box3" style="display: none;">
+      <div class="label">New</div>
+      <div class="shortcut">control + n</div>
+    </div>
+  </div>
   <pre id="box" class="hljs" tabindex="0"><code id="codebox"></code></pre>
   <textarea spellcheck="false" id="textarea" oninput='updateInputHeight()' placeholder="Save with ctrl+s"></textarea>
 </body>
@@ -35,6 +51,11 @@ pre {
  word-wrap: break-word;       
 }
 
+#box1 > a {
+  color: #8fbcc8 !important;
+  text-decoration: none;
+}
+
 </style>
 
 
@@ -45,11 +66,18 @@ function updateInputHeight () {
   el.style.height = el.scrollHeight + "px"
 }
 
+function htmlEntities(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 const url = location.href
 const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{13})(\.[a-z0-]{1,6})?)?/)
 const isEditor = urls[5]===undefined
 if (!isEditor) document.getElementById('textarea').setAttribute('readonly', true)
+
 if (isEditor) document.getElementById('body').classList += ' editor'
+else document.getElementById('body').classList += ' viewer'
+
 if (!isEditor) {
   const pasteID = urls[5]
   console.log('Requesting paste with id: '+pasteID)
@@ -62,7 +90,7 @@ if (!isEditor) {
   xhr.onload = () => {
     if (xhr.status === 200) {
       const codebox = document.getElementById('codebox') 
-      codebox.innerHTML = xhr.responseText
+      codebox.innerHTML = htmlEntities(xhr.responseText)
       for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
         document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
       }
@@ -75,10 +103,28 @@ if (!isEditor) {
 } else {
   document.getElementById('linenos').innerHTML = '>'
 }
-</script>
 
+function saveContent () {
+  const content = document.getElementById('textarea').value
+  if (content.length > 0) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", location.href+'paste', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        content: content
+    }))
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        location.href = location.href+xhr.responseText
+        console.log(xhr.responseText)
+      } else {
+        console.log(xhr.status)
+      }
+    }
+  }
+  return false
+}
 
-<script>
 let isCtrl = false;
 document.onkeyup=function(e){
   if(e.keyCode == 17) isCtrl=false;
@@ -87,24 +133,7 @@ document.onkeyup=function(e){
 document.onkeydown=function(e){
   if(e.keyCode === 17) isCtrl=true;
   if(e.keyCode === 83 && isCtrl === true && isEditor === true) {
-    const content = document.getElementById('textarea').value
-    if (content.length > 0) {
-      let xhr = new XMLHttpRequest();
-      xhr.open("POST", location.href+'paste', true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.send(JSON.stringify({
-          content: content
-      }))
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          location.href = location.href+xhr.responseText
-          console.log(xhr.responseText)
-        } else {
-          console.log(xhr.status)
-        }
-      }
-    }
-    return false
+    return saveContent()
   }
 }
 
