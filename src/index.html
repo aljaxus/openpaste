@@ -34,11 +34,20 @@ body:not(.loaded) #textarea { display: none; }
 body:not(.editor) #textarea { display: none; }
 body.editor #box { display: none; }
 
+#linenos,
+#key {
+  user-select:none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 #textarea {
   border-left: 1px rgba(150, 150, 150, 0.5) solid;
   padding-left: 1rem;
   margin-left: .5rem;
 }
+
 ::-webkit-scrollbar { width: 12px; height: 12px }
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
