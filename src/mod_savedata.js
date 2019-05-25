@@ -8,7 +8,7 @@ app.post('/paste', (req, res) => {
     if (content!==null && content!==undefined) {
       const nowms = (new Date).getTime()
       db.set(nowms, (typeof content==='object'?JSON.stringify(content,null,2):content))
-      console.log('Saved new paste:\n  Size: '+(req.headers['content-length']/8)+'B')
+      console.log(`Saved new paste:\n  ID: ${nowms+''}\n  Size: ${req.headers['content-length']/8}B`)
       res.status(200).send(nowms+'')
     } else {
       res.sendStatus(400)

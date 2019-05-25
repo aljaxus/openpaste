@@ -15,8 +15,8 @@
       <a href="https://aljaxus.eu" target="_blank">By Aljaxus</a>
     </div>
     <div id="box2">
-      <!-- <button class="save function button-picture enabled">Save</button> -->
-      <!-- <button class="new function button-picture enabled">New<div id="pointer" style="display: none;"></div></button> -->
+      <!-- <button class="save function button-picture">Save</button> -->
+      <!-- <button class="new function button-picture">New<div id="pointer" style="display: none;"></div></button> -->
       <!-- <button class="duplicate function button-picture">Duplicate &amp; Edit</button> -->
       <!-- <button class="raw function button-picture">Just Text</button> -->
       <!-- <button class="twitter function button-picture">Twitter</button> -->
@@ -98,12 +98,14 @@ if (!isEditor) {
   }))
   xhr.onload = () => {
     if (xhr.status === 200) {
+      if (xhr.responseText === 'undefined') {
+        return document.location.href = '/'
+      }
       const codebox = document.getElementById('codebox') 
       codebox.innerHTML = htmlEntities(xhr.responseText)
       for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
         document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
       }
-      console.log(hljs)
       hljs.highlightBlock(codebox)
     } else {
       console.log(xhr.status)
