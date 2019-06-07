@@ -6,7 +6,7 @@ app.get('/getpaste', (req, res) => {
     try {
       const dat = db.get(req.query.pasteid)
       if (dat !== null) {
-        res.status(200).send(dat+'')
+        res.status(200).send(String(dat).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'))
       } else {
         res.sendStatus(400)
       }
