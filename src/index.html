@@ -26,7 +26,7 @@
       <div class="shortcut">control + n</div>
     </div>
   </div>
-  <pre id="box" class="hljs" tabindex="0"><code id="codebox"></code></pre>
+  <pre id="box" class="hljs" tabindex="0"><code id="codebox">LOADING PASTE . . .</code></pre>
   <textarea spellcheck="false" id="textarea" oninput='updateInputHeight()' placeholder="Save with ctrl+s"></textarea>
 </body>
 <style>
@@ -53,39 +53,71 @@ body.editor #box { display: none; }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
 
 pre {
- white-space: pre-wrap;       
- white-space: -moz-pre-wrap;  
- white-space: -pre-wrap;      
- white-space: -o-pre-wrap;    
- word-wrap: break-word;       
+  border-left: 1px rgba(150, 150, 150, 0.5) solid !important;
+  
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+
+  counter-reset: line;
+}
+
+#linenos > span {
+  counter-increment: line;
+}
+#linenos > span:after{
+  content: counter(line);
+  user-select:none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #box1 > a {
   color: #8fbcc8 !important;
   text-decoration: none;
 }
-
+#box > code {
+  padding: 0 0 0 1em;
+}
 </style>
 
 
 <script>
+const url = location.href
+const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{13})(\.[a-z0-]{1,6})?)?/)
+const isEditor = urls[5]===undefined
+
+const bodyEl = document.getElementById('body')
+const linenosEl = document.getElementById('linenos')
+const inputEl = document.getElementById('textarea')
+const codebox = document.getElementById('codebox') 
+
+
 function updateInputHeight () {
-  const el = document.getElementById('textarea')
-  el.style.height = "";
-  el.style.height = el.scrollHeight + "px"
+  inputEl.style.height = "";
+  inputEl.style.height = inputEl.scrollHeight + "px"
 }
 
 function htmlEntities(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-const url = location.href
-const urls = url.match(/(https?:\/\/)([^\/\:]*)(\:[0-9]{1,4})?(\/([0-9]{13})(\.[a-z0-]{1,6})?)?/)
-const isEditor = urls[5]===undefined
+async function generateLineos (i) {
+  let str = ''
+  for (let j = 0; j < i; j++) {
+    str += '<span></span><br>'
+  }
+  return str
+}
+
+
 if (!isEditor) document.getElementById('textarea').setAttribute('readonly', true)
 
-if (isEditor) document.getElementById('body').classList += ' editor'
-else document.getElementById('body').classList += ' viewer'
+if (isEditor) bodyEl.classList += ' editor'
+else bodyEl.classList += ' viewer'
 
 if (!isEditor) {
   const pasteID = urls[5]
@@ -96,27 +128,27 @@ if (!isEditor) {
   xhr.send(JSON.stringify({
       pasteid: pasteID
   }))
-  xhr.onload = () => {
+  xhr.onload = async () => {
     if (xhr.status === 200) {
       if (xhr.responseText === 'undefined') {
         return document.location.href = '/'
       }
-      const codebox = document.getElementById('codebox') 
       codebox.innerHTML = htmlEntities(xhr.responseText)
-      for (let index = 0; index < xhr.responseText.split('\n').length; index++) {
-        document.getElementById('linenos').innerHTML += ('<span>'+(index+1)+'</span><br>')
-      }
+      
+      // linenosEl.innerHTML = await generateLineos(xhr.responseText.split('\n').length)
+      
       hljs.highlightBlock(codebox)
     } else {
       console.log(xhr.status)
     }
   }
 } else {
-  document.getElementById('linenos').innerHTML = '>'
+  linenosEl.classList += 'noCounter'
+  linenosEl.innerHTML = '>'
 }
 
 function saveContent () {
-  const content = document.getElementById('textarea').value
+  const content = inputEl.value
   if (content.length > 0) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", location.href+'paste', true);
@@ -149,6 +181,6 @@ document.onkeydown=function(e){
 }
 
 function r(f){/in/.test(document.readyState)?setTimeout('r('+f+')',9):f()}
-r(() => {document.getElementById('textarea').focus(); document.getElementById('body').classList = document.getElementById('body').classList+=' loaded'; updateInputHeight() } )
+r(() => {inputEl.focus(); bodyEl.classList = bodyEl.classList+=' loaded'; updateInputHeight() } )
 </script>
 </html>
