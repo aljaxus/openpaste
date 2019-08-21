@@ -8,8 +8,8 @@ services:
     build:
       context: ./app
       dockerfile: dockerfile
-    env_file: ./config/development.env
-    command: ["npm", "run", "start"]
+    env_file: ./config/production.env
+    command: ["yarn", "run", "start"]
     ports:
       - "8101:80"
     depends_on:
