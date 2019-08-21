@@ -1,0 +1,70 @@
+version: "3.4"
+services:
+
+  app:
+    container_name: openpasteapp
+    restart: unless-stopped
+    image: openpasteapp:latest
+    build:
+      context: ./app
+      dockerfile: dockerfile
+    env_file: ./config/development.env
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./app:/var/server
+      - /var/server/node_modules
+    ports:
+      - "8101:80"
+    depends_on:
+      - mongodb
+    healthcheck:
+      test: ["CMD", "curl", "-sSG", "http://localhost:80/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks: 
+      openpasteNet:
+        ipv4_address: 172.11.0.2
+      
+  mongodb:
+    container_name: openpastemongodb
+    restart: unless-stopped
+    image: mongo
+    volumes:
+      - ./_mongodbDev:/data/db
+    healthcheck:
+      test: ["CMD", "echo", "'db.runCommand(\"ping\").ok'", "|", "mongodb", "localhost:27017/test", "--quiet"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks: 
+      openpasteNet:
+        ipv4_address: 172.11.0.4
+      
+  mongopanel:
+    container_name: openpastemongopanel
+    restart: unless-stopped
+    image: mongo-express
+    env_file: ./config/mongo-express.env
+    ports:
+      - "83:8081"
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    networks: 
+      openpasteNet:
+        ipv4_address: 172.11.0.5
+
+
+
+networks:
+  openpasteNet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 172.11.0.0/24
