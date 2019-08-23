@@ -1,0 +1,108 @@
+<html>
+<head>
+  <title>OpenPaste - create a new paste</title>
+  <meta charset="utf-8" />
+  <meta name="robots" content="noindex,nofollow" />
+</head>
+<body>
+  <div id="tips">
+    CTRL + S = Save paste<br>
+    By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
+  </div>
+  <textarea 
+    spellcheck="false" 
+    id="textarea"
+    placeholder="Save with ctrl+s"
+  ></textarea>
+</body>
+</html>
+<script>
+var input = document.getElementById('textarea');
+var isCtrl = false;
+
+function saveContent () {
+  var content = input.value;
+  if (content.length > 0) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", location.href+'paste', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ content: content }))
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        location.href = location.href+xhr.responseText;
+      } else { 
+        console.warn(xhr.status);
+      }
+    }
+  }
+  return false
+}
+
+document.onkeyup = function (e) { 
+  if (e.keyCode === 17) {
+    isCtrl = false; 
+  }
+}
+document.onkeydown = function (e) {
+  if(e.keyCode === 17) {
+    isCtrl = true;
+  }
+  if(e.keyCode === 83 && isCtrl === true) {
+    return saveContent();
+  }
+}
+</script>
+<style>
+* {
+  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar { width: 12px; height: 12px }
+::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow: hidden;
+  background: #002b36;
+  padding: 7px;
+  margin: 0;
+}
+a {
+  color:tomato;
+}
+
+textarea{
+  white-space: pre;
+  background:0 0;
+  border:0;
+  color:#fff;
+  padding:0;
+  width:100%;
+  height:100%;
+  font-family:monospace;
+  outline:none;
+  resize:none;
+  font-size:13px;
+}
+
+#tips {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-touch-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+
+  color: white;
+  position: fixed;
+  margin: 7px 16px 0 0;
+  font-size: 14px;
+  line-height: 15px;
+  right: 0;
+  top: 0;
+}
+
+</style>
