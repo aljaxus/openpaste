@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>OpenPaste - create a new paste</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="/solarized_dark.css" />
+  <link rel="stylesheet" type="text/css" href="/application.css" />
+  <script type="text/javascript" src="/highlight.min.js"></script>
+  <script type="text/javascript" src="/application.js"></script>
+  <meta name="robots" content="noindex,nofollow" />
+</head>
+<body id="body">
+  <div id="tips">
+    SHIFT + N = New paste<br>
+    By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
+  </div>
+  <pre id="box" class="hljs" tabindex="0"><code id="codebox"><%= content %></code></pre>
+</body>
+</html>
+<script>
+var input = document.getElementById('textarea');
+var isShift = false;
+
+document.onkeyup = function (e) {
+  if ( e.keyCode === 16 ) {
+    isShift = false;
+  }
+}
+document.onkeydown = function (e) {
+  if ( e.keyCode === 16 ) {
+    isShift = true;
+  }
+  if ( e.keyCode === 78 && isShift === true ) {
+    location.href = '//' + location.host;
+    return false;
+  }
+}
+</script>
+<style>
+* {
+  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar { width: 12px; height: 12px }
+::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
+
+body {
+  margin: 0;
+}
+a {
+  color:tomato;
+}
+#textarea {
+  white-space: pre;
+}
+
+#tips {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-touch-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+
+  color: white;
+  position: fixed;
+  margin: 7px 16px 0 0;
+  font-size: 14px;
+  line-height: 15px;
+  right: 0;
+  top: 0;
+}
+
+</style>
+<script>hljs.initHighlightingOnLoad();</script>
