@@ -16,8 +16,18 @@ module.exports = {
     return savedPaste._id
   },
   get: async ( id ) => {
-    const paste = await Paste.findById(id)
-    if (!paste) return new Error('Paste with such ID does not exist')
-    return paste.content
+    try {
+      const paste = await Paste.findById(id)
+      if (!paste) return { status: 400, content: 'Paste not found!' }
+      return {
+        ...paste.toObject(),
+        status: 200,
+      }
+    } catch (error) {
+      return {
+        status: 500,
+        content: JSON.stringify(error, null, 2)
+      }
+    }
   }
 }

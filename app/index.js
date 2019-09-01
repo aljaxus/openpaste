@@ -11,13 +11,14 @@ const app = express()
 app.get('/', (req, res) => res.render('home.ejs') )
 
 app.get('/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
-  const content = await db.get(req.params.pasteid)
-  res.render('read.ejs', { content })
+  const paste = await db.get(req.params.pasteid)
+  res.render('read.ejs', { content: paste.content })
 })
 
 app.get('/raw/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
-  const content = await db.get(req.params.pasteid)
-  res.send(content)
+  const paste = await db.get(req.params.pasteid)
+  res.status(paste.status)
+    .send(paste.content)
 })
 
 app.post('/paste', async (req, res) => {
