@@ -18,7 +18,10 @@ app.get('/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
   })
 })
 
-app.get('/raw/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
+app.get([
+  '/raw/:pasteid([a-zA-Z0-9]{24})',
+  '/:pasteid([a-zA-Z0-9]{24})/raw'
+], async (req, res) => {
   const paste = await db.get(req.params.pasteid)
   res.status(paste.status)
     .type('text/plain')
