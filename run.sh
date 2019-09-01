@@ -62,5 +62,5 @@ if [[ ! -z "$development" ]]; then
   docker-compose -f docker-compose.dev.yml up
 else 
   printf "\n\n=-=-= RUNNING PRODUCTION BUILD\n\n"
-  docker-compose -f docker-compose.prod.yml up
+  docker-compose -f docker-compose.prod.yml up -d
 fi
