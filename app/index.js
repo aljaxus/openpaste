@@ -12,7 +12,10 @@ app.get('/', (req, res) => res.render('home.ejs') )
 
 app.get('/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
   const paste = await db.get(req.params.pasteid)
-  res.render('read.ejs', { content: paste.content })
+  res.render('read.ejs', { 
+    content: paste.content, 
+    pasteid: req.params.pasteid 
+  })
 })
 
 app.get('/raw/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
