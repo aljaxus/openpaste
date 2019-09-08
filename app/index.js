@@ -9,6 +9,7 @@ const app = express()
   .use(bodyparser.json({limit: '3mb'}))
 
 app.get('/', (req, res) => res.render('home.ejs') )
+app.get('/pastes', (req, res) => res.render('mypastes.ejs') )
 
 app.get('/:pasteid([a-zA-Z0-9]{24})', async (req, res) => {
   const paste = await db.get(req.params.pasteid)

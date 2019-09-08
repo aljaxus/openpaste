@@ -7,6 +7,7 @@
 <body>
   <div id="tips">
     CTRL + S = <a onclick="saveContent()" style="cursor: pointer; text-decoration: underline;">Save paste</a><br>
+    <a href="/pastes" style="cursor: pointer; text-decoration: underline;">My pastes</a><br>
     By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
   </div>
   <textarea 
@@ -32,7 +33,7 @@ function saveContent () {
       if (xhr.status === 200) {
         const mypastes = getCookie('openpaste_mypastes') || ['openpaste_mypastes', '[]'];
         mypastes[1] = JSON.parse(mypastes[1]);
-        mypastes[1].push(String(xhr.responseText));
+        mypastes[1].push({id: String(xhr.responseText), time: new Date().toISOString()});
         setCookie('openpaste_mypastes', JSON.stringify(mypastes[1]), 99999);
         location.href = location.href+xhr.responseText;
       } else { 

@@ -2,25 +2,50 @@
 <head>
   <title>OpenPaste - create a new paste</title>
   <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="/solarized_dark.css" />
-  <link rel="stylesheet" type="text/css" href="/application.css" />
-  <script type="text/javascript" src="/highlight.min.js"></script>
-  <script type="text/javascript" src="/application.js"></script>
   <meta name="robots" content="noindex,nofollow" />
 </head>
-<body id="body">
+<body>
   <div id="tips">
     SHIFT + N = <a href="/">New paste</a><br>
-    Read the <a href="/raw/<%= pasteid %>">raw paste</a><br>
-    <a href="/pastes" style="cursor: pointer; text-decoration: underline;">My pastes</a><br>
     By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
   </div>
-  <pre id="box" class="hljs" tabindex="0"><code id="codebox"><%= content %></code></pre>
+  <ul id="pastes">
+  </ul>
 </body>
 </html>
+<script src="/application.js"></script>
 <script>
-var input = document.getElementById('textarea');
+const pastes = document.getElementById('pastes')
 var isShift = false;
+
+window.onload = function () {
+  const mypastes = getCookie('openpaste_mypastes') || ['openpaste_mypastes', '[]'];
+  mypastes[1] = JSON.parse(mypastes[1]);
+  for (const i in mypastes[1]) {
+    if (mypastes[1].hasOwnProperty(i)) {
+      const paste = mypastes[1][i];
+      const date = new Date(paste.time).toLocaleDateString()
+      const time = new Date(paste.time).toLocaleTimeString()
+
+      const childLi = document.createElement('LI');
+      const childA = document.createElement('A');
+      const childTxt = document.createTextNode(String(paste.id) + ' - ' + date + ' ' + time );
+
+      childA.appendChild(childTxt)
+      childA.href = '/' + paste.id;
+      childA.title = 'Paste with ID: ' + paste.id;
+
+      childLi.appendChild(childA)
+      pastes.appendChild(childLi)
+    }
+  }
+  if (mypastes[1].length === 0) {
+    const childLi = document.createElement('LI');
+    const childTxt = document.createTextNode('You do not have any pastes yet!');
+
+    pastes.appendChild(childTxt)
+  }
+}
 
 document.onkeyup = function (e) {
   if ( e.keyCode === 16 ) {
@@ -45,17 +70,28 @@ document.onkeydown = function (e) {
 ::-webkit-scrollbar { width: 12px; height: 12px }
 ::-webkit-scrollbar-track { background:rgba(0, 0, 0, 0.1) }
 ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.5) }
+html {
+  margin: 0;
+  padding: 0;
+}
 
 body {
+  overflow: hidden;
+  background: #002b36;
+  padding: 7px;
   margin: 0;
 }
 a {
   color:tomato;
 }
-#textarea {
-  white-space: pre;
+#pastes {
+  list-style: upper-roman;
+  color: white;
+  font-family: monospace;
 }
-
+#pastes > li > a {
+  text-decoration: none;
+}
 #tips {
   user-select: none;
   -moz-user-select: none;
@@ -74,4 +110,3 @@ a {
 }
 
 </style>
-<script>hljs.initHighlightingOnLoad();</script>
