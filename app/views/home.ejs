@@ -16,6 +16,7 @@
   ></textarea>
 </body>
 </html>
+<script src="/application.js"></script>
 <script>
 var input = document.getElementById('textarea');
 var isCtrl = false;
@@ -29,6 +30,10 @@ function saveContent () {
     xhr.send(JSON.stringify({ content: content }))
     xhr.onload = function () {
       if (xhr.status === 200) {
+        const mypastes = getCookie('openpaste_mypastes') || ['openpaste_mypastes', '[]'];
+        mypastes[1] = JSON.parse(mypastes[1]);
+        mypastes[1].push(String(xhr.responseText));
+        setCookie('openpaste_mypastes', JSON.stringify(mypastes[1]), 99999);
         location.href = location.href+xhr.responseText;
       } else { 
         console.warn(xhr.status);
