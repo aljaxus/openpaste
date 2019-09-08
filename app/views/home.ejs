@@ -6,9 +6,7 @@
 </head>
 <body>
   <div id="tips">
-    CTRL + S = <a onclick="saveContent()" style="cursor: pointer; text-decoration: underline;">Save paste</a><br>
-    <a href="/pastes" style="cursor: pointer; text-decoration: underline;">My pastes</a><br>
-    By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
+    CTRL + S = <a onclick="saveContent()" style="cursor: pointer; text-decoration: underline;">Save paste</a> | <a href="/pastes" style="cursor: pointer; text-decoration: underline;">My pastes</a> | By <a href="https://aljaxus.eu" target="_blank">Aljaxus</a>
   </div>
   <textarea 
     spellcheck="false" 
@@ -103,7 +101,8 @@ textarea{
   -webkit-user-select: none;
 
   color: white;
-  position: fixed;
+  text-align: right;
+  width: 100%;
   margin: 7px 16px 0 0;
   font-size: 14px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
